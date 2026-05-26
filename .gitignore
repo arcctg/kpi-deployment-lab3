@@ -4,6 +4,7 @@ app/app
 *.local.yaml
 deploy/rendered/
 runner-token.txt
+.runner_pubkey
 .venv/
 coverage.out
 coverage.html
