@@ -73,8 +73,8 @@ chmod 640 /etc/mywebapp/config.yaml
 export IMAGE_REF
 APP_UID=$(id -u app)
 APP_GID=$(id -g app)
-export APP_UID APP_GID
-envsubst '${IMAGE_REF} ${APP_UID} ${APP_GID}' < "${REPO_DEPLOY}/mywebapp.service.tmpl" > /etc/systemd/system/mywebapp.service
+export APP_UID APP_GID IMAGE_REF
+envsubst < "${REPO_DEPLOY}/mywebapp.service.tmpl" > /etc/systemd/system/mywebapp.service
 
 rm -f /etc/nginx/sites-enabled/default
 install -m 644 "${REPO_DEPLOY}/nginx.conf" /etc/nginx/sites-available/mywebapp
