@@ -81,6 +81,9 @@ nginx -t
 install -m 440 "${REPO_DEPLOY}/sudoers-operator" /etc/sudoers.d/operator
 chown root:root /etc/sudoers.d/operator
 
+install -m 440 "${REPO_DEPLOY}/sudoers-student" /etc/sudoers.d/student
+chown root:root /etc/sudoers.d/student
+
 mkdir -p /home/student
 echo "9" > /home/student/gradebook
 chown student:student /home/student/gradebook
