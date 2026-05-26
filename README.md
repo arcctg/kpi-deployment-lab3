@@ -46,6 +46,8 @@ Run URL: https://github.com/arcctg/kpi-deployment-lab3/actions/runs/26469866153
 
 Jobs: deploy ✓, verify ✗, notify ✓ (Telegram sent)
 
+![Telegram message](docs/images/telegram-message.png)
+
 ![Successful deploy and failed verify](docs/images/ci-deploy-not-verify.png)
 
 ### Logs
