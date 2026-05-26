@@ -5,6 +5,7 @@ app/app
 deploy/rendered/
 runner-token.txt
 .runner_pubkey
+runner_key.txt
 .venv/
 coverage.out
 coverage.html
