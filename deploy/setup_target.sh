@@ -71,6 +71,9 @@ chown root:app /etc/mywebapp/config.yaml
 chmod 640 /etc/mywebapp/config.yaml
 
 export IMAGE_REF
+APP_UID=$(id -u app)
+APP_GID=$(id -g app)
+export APP_UID APP_GID IMAGE_REF
 envsubst < "${REPO_DEPLOY}/mywebapp.service.tmpl" > /etc/systemd/system/mywebapp.service
 
 rm -f /etc/nginx/sites-enabled/default
@@ -80,6 +83,9 @@ nginx -t
 
 install -m 440 "${REPO_DEPLOY}/sudoers-operator" /etc/sudoers.d/operator
 chown root:root /etc/sudoers.d/operator
+
+install -m 440 "${REPO_DEPLOY}/sudoers-student" /etc/sudoers.d/student
+chown root:root /etc/sudoers.d/student
 
 mkdir -p /home/student
 echo "9" > /home/student/gradebook
