@@ -171,3 +171,37 @@ jobs:
             "echo '${{ secrets.GITHUB_TOKEN }}' | sudo docker login ghcr.io -u '${{ github.actor }}' --password-stdin"
           ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" \
             "sudo docker pull '${IMAGE_REF}' && sudo systemctl restart mywebapp.service && sudo systemctl reload nginx"
+
+  verify:
+    name: verify
+    runs-on: self-hosted
+    needs: deploy
+    if: startsWith(github.ref, 'refs/tags/v')
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TARGET_SSH_KEY }}" > ~/.ssh/target_key
+          chmod 600 ~/.ssh/target_key
+          cat >> ~/.ssh/config <<EOF
+          Host deploy-target
+            HostName ${{ secrets.TARGET_HOST }}
+            User ${{ secrets.TARGET_USER }}
+            IdentityFile ~/.ssh/target_key
+            StrictHostKeyChecking accept-new
+          EOF
+          chmod 600 ~/.ssh/config
+      - name: Install test dependencies
+        run: |
+          python3 -m venv .venv
+          .venv/bin/pip install -r tests/verify/requirements.txt
+      - name: Run testinfra verification
+        run: |
+          .venv/bin/pytest tests/verify -v --tb=short \
+            --hosts=ssh://deploy-target \
+            --junitxml=verify-report.xml
+      - uses: actions/upload-artifact@v4
+        with:
+          name: verify-report
+          path: verify-report.xml
