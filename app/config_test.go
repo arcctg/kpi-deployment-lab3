@@ -21,7 +21,7 @@ database:
   password: secret
   dbname: notes
 `
-	require.NoError(t, os.WriteFile(path, []byte(content), 0o644))
+	require.NoError(t, os.WriteFile(path, []byte(content), 0o600))
 
 	cfg, err := LoadConfig(path)
 	require.NoError(t, err)
@@ -43,7 +43,7 @@ database:
   password: secret
   dbname: notes
 `
-	require.NoError(t, os.WriteFile(path, []byte(content), 0o644))
+	require.NoError(t, os.WriteFile(path, []byte(content), 0o600))
 
 	t.Setenv("APP_HOST", "0.0.0.0")
 	t.Setenv("APP_PORT", "8080")

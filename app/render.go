@@ -14,7 +14,9 @@ type noteRow struct {
 
 func renderJSON(w http.ResponseWriter, v any) {
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(v)
+	if err := json.NewEncoder(w).Encode(v); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }
 
 func renderNotesListHTML(w http.ResponseWriter, notes []noteRow) {

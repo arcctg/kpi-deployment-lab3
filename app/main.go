@@ -7,6 +7,7 @@ import (
 	"net"
 	"net/http"
 	"os"
+	"time"
 
 	systemdActivation "github.com/coreos/go-systemd/v22/activation"
 )
@@ -46,12 +47,20 @@ func main() {
 	mux.HandleFunc("/notes", app.handleNotes)
 	mux.HandleFunc("/notes/", app.handleNoteByID)
 
+	serve := func(ln net.Listener) {
+		srv := &http.Server{
+			Handler:           mux,
+			ReadHeaderTimeout: 5 * time.Second,
+		}
+		if err := srv.Serve(ln); err != nil {
+			log.Fatalf("serve: %v", err)
+		}
+	}
+
 	listeners, err := systemdActivation.Listeners()
 	if err == nil && len(listeners) > 0 {
 		log.Printf("starting on systemd socket")
-		if err := http.Serve(listeners[0], mux); err != nil {
-			log.Fatalf("serve: %v", err)
-		}
+		serve(listeners[0])
 		return
 	}
 
@@ -61,7 +70,5 @@ func main() {
 		log.Fatalf("listen %s: %v", addr, err)
 	}
 	log.Printf("starting on %s", addr)
-	if err := http.Serve(ln, mux); err != nil {
-		log.Fatalf("serve: %v", err)
-	}
+	serve(ln)
 }
