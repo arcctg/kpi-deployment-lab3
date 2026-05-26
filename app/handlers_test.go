@@ -15,7 +15,7 @@ import (
 
 func newTestApp(t *testing.T) (*App, sqlmock.Sqlmock, func()) {
 	t.Helper()
-	db, mock, err := sqlmock.New()
+	db, mock, err := sqlmock.New(sqlmock.MonitorPingsOption(true))
 	require.NoError(t, err)
 	return &App{db: db}, mock, func() { db.Close() }
 }
