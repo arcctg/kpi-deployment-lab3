@@ -3,7 +3,7 @@ def test_nginx_site_enabled(host):
 
 
 def test_nginx_config_valid(host):
-    cmd = host.run("nginx -t")
+    cmd = host.run("sudo nginx -t")
     assert cmd.rc == 0
 
 
