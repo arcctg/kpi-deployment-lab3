@@ -129,7 +129,7 @@ jobs:
           IMAGE="ghcr.io/${GITHUB_REPOSITORY}"
           case "${GITHUB_REF}" in
             refs/tags/v*)
-              echo "tags=${IMAGE}:stable,${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+              echo "tags=${IMAGE}:stable,${IMAGE}:${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
               ;;
             *)
               echo "tags=${IMAGE}:latest,${IMAGE}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
