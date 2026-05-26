@@ -8,8 +8,8 @@ import (
 )
 
 type noteRow struct {
-	ID    int
-	Title string
+	ID    int    `json:"id"`
+	Title string `json:"title"`
 }
 
 func renderJSON(w http.ResponseWriter, v any) {
