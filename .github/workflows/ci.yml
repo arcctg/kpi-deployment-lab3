@@ -126,12 +126,15 @@ jobs:
       - name: Set image tags
         id: meta
         run: |
-          IMAGE="ghcr.io/${{ github.repository }}"
-          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
-            echo "tags=${IMAGE}:stable,${IMAGE}:${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
-          else
-            echo "tags=${IMAGE}:latest,${IMAGE}:sha-${{ github.sha }}" >> "$GITHUB_OUTPUT"
-          fi
+          IMAGE="ghcr.io/${GITHUB_REPOSITORY}"
+          case "${GITHUB_REF}" in
+            refs/tags/v*)
+              echo "tags=${IMAGE}:stable,${GITHUB_REF_NAME}" >> "$GITHUB_OUTPUT"
+              ;;
+            *)
+              echo "tags=${IMAGE}:latest,${IMAGE}:sha-${GITHUB_SHA}" >> "$GITHUB_OUTPUT"
+              ;;
+          esac
       - uses: docker/build-push-action@v6
         with:
           context: .
@@ -159,12 +162,18 @@ jobs:
           ssh-keyscan -H "${{ secrets.TARGET_HOST }}" >> ~/.ssh/known_hosts
       - name: Copy deploy files
         run: |
-          ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" "mkdir -p /tmp/mywebapp-deploy"
-          scp -i ~/.ssh/target_key deploy/config.yaml.tmpl deploy/mywebapp.service.tmpl deploy/nginx.conf deploy/sudoers-operator deploy/setup_target.sh "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}:/tmp/mywebapp-deploy/"
+          TARGET="${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}"
+          ssh -i ~/.ssh/target_key "${TARGET}" "mkdir -p /tmp/mywebapp-deploy"
+          scp -i ~/.ssh/target_key deploy/config.yaml.tmpl deploy/mywebapp.service.tmpl \
+            deploy/nginx.conf deploy/sudoers-operator deploy/setup_target.sh \
+            "${TARGET}:/tmp/mywebapp-deploy/"
       - name: Run target setup
         run: |
-          ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" \
-            "sudo env IMAGE_REF='${IMAGE_REF}' DB_USER='${DB_USER}' DB_NAME='${DB_NAME}' DB_PASSWORD='${DB_PASSWORD}' STUDENT_PASSWORD='${STUDENT_PASSWORD}' REPO_DEPLOY='/tmp/mywebapp-deploy' bash /tmp/mywebapp-deploy/setup_target.sh"
+          TARGET="${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}"
+          ssh -i ~/.ssh/target_key "${TARGET}" \
+            "sudo env IMAGE_REF='${IMAGE_REF}' DB_USER='${DB_USER}' DB_NAME='${DB_NAME}' \
+            DB_PASSWORD='${DB_PASSWORD}' STUDENT_PASSWORD='${STUDENT_PASSWORD}' \
+            REPO_DEPLOY='/tmp/mywebapp-deploy' bash /tmp/mywebapp-deploy/setup_target.sh"
       - name: Login and pull image on target
         run: |
           ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" \

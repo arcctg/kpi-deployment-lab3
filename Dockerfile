@@ -8,7 +8,7 @@ RUN go mod download
 COPY app/ ./
 RUN CGO_ENABLED=0 go build -o mywebapp .
 
-FROM gcr.io/distroless/static-debian12
+FROM gcr.io/distroless/static-debian12:nonroot
 
 COPY --from=builder /build/mywebapp /mywebapp
 
