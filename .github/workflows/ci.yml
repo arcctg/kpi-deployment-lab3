@@ -163,9 +163,10 @@ jobs:
       - name: Copy deploy files
         run: |
           TARGET="${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}"
-          ssh -i ~/.ssh/target_key "${TARGET}" "mkdir -p /tmp/mywebapp-deploy"
+          ssh -i ~/.ssh/target_key "${TARGET}" \
+            "sudo mkdir -p /tmp/mywebapp-deploy && sudo chown ${{ secrets.TARGET_USER }}:${{ secrets.TARGET_USER }} /tmp/mywebapp-deploy"
           scp -i ~/.ssh/target_key deploy/config.yaml.tmpl deploy/mywebapp.service.tmpl \
-            deploy/nginx.conf deploy/sudoers-operator deploy/setup_target.sh \
+            deploy/nginx.conf deploy/sudoers-operator deploy/sudoers-student deploy/setup_target.sh \
             "${TARGET}:/tmp/mywebapp-deploy/"
       - name: Run target setup
         run: |
