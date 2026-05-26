@@ -20,6 +20,14 @@ NGINX_SITES_ENABLED = "/etc/nginx/sites-enabled"
 SUDOERS_DIR = "/etc/sudoers.d"
 
 
+def require_env(name):
+    value = os.environ.get(name)
+    if not value:
+        print(f"Missing required environment variable: {name}", file=sys.stderr)
+        sys.exit(1)
+    return value
+
+
 def run(cmd, **kwargs):
     result = subprocess.run(cmd, shell=True, capture_output=True, text=True, **kwargs)
     if result.returncode != 0:
@@ -37,21 +45,22 @@ def user_exists(name):
 
 def step_install_packages():
     run("apt-get update -qq")
-    run("apt-get install -y -qq postgresql nginx golang sudo wget")
-    
-    run("wget -q https://github.com/ducaale/xh/releases/download/v0.25.3/xh-v0.25.3-x86_64-unknown-linux-musl.tar.gz -O /tmp/xh.tar.gz && tar -xzf /tmp/xh.tar.gz -C /usr/local/bin --strip-components=1 xh-v0.25.3-x86_64-unknown-linux-musl/xh && rm /tmp/xh.tar.gz")
+    run("apt-get install -y -qq postgresql nginx golang sudo wget gettext-base")
 
 
 def step_create_users():
+    student_password = require_env("STUDENT_PASSWORD")
+    default_password = "12345678"
+
     if not user_exists("student"):
         run("useradd -m -s /bin/bash student")
     run("usermod -aG sudo student")
-    run("echo 'student:12345678' | chpasswd")
+    run(f"echo 'student:{student_password}' | chpasswd")
 
     if not user_exists("teacher"):
         run("useradd -m -s /bin/bash teacher")
     run("usermod -aG sudo teacher")
-    run("echo 'teacher:12345678' | chpasswd")
+    run(f"echo 'teacher:{default_password}' | chpasswd")
     run("chage -d 0 teacher")
 
     if not user_exists("app"):
@@ -59,7 +68,7 @@ def step_create_users():
 
     if not user_exists("operator"):
         run("useradd -m -s /bin/bash -g operator operator")
-    run("echo 'operator:12345678' | chpasswd")
+    run(f"echo 'operator:{default_password}' | chpasswd")
     run("chage -d 0 operator")
 
 
@@ -72,16 +81,20 @@ def step_configure_ssh_auth():
 
 
 def step_setup_postgres():
+    db_user = require_env("DB_USER")
+    db_password = require_env("DB_PASSWORD")
+    db_name = require_env("DB_NAME")
+
     run("systemctl start postgresql")
     run("systemctl enable postgresql")
 
-    user_check = run("sudo -u postgres psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname='mywebapp'\"")
+    user_check = run(f"sudo -u postgres psql -tAc \"SELECT 1 FROM pg_roles WHERE rolname='{db_user}'\"")
     if user_check != "1":
-        run("sudo -u postgres psql -c \"CREATE ROLE mywebapp WITH LOGIN PASSWORD 'mywebapp'\"")
+        run(f"sudo -u postgres psql -c \"CREATE ROLE {db_user} WITH LOGIN PASSWORD '{db_password}'\"")
 
-    db_check = run("sudo -u postgres psql -tAc \"SELECT 1 FROM pg_database WHERE datname='mywebapp'\"")
+    db_check = run(f"sudo -u postgres psql -tAc \"SELECT 1 FROM pg_database WHERE datname='{db_name}'\"")
     if db_check != "1":
-        run("sudo -u postgres createdb -O mywebapp mywebapp")
+        run(f"sudo -u postgres createdb -O {db_user} {db_name}")
 
 
 def step_build_app():
@@ -110,8 +123,9 @@ def step_build_app():
 
 
 def step_deploy_config():
+    template_path = f"{DEPLOY_SRC}/config.yaml.tmpl"
     os.makedirs(CONFIG_DIR, exist_ok=True)
-    shutil.copy(f"{DEPLOY_SRC}/config.yaml", CONFIG_DEST)
+    run(f"envsubst < {template_path} > {CONFIG_DEST}")
     run(f"chown root:app {CONFIG_DEST}")
     run(f"chmod 640 {CONFIG_DEST}")
 
@@ -187,7 +201,7 @@ def main():
     for name, fn in steps:
         print(f"==> {name}")
         fn()
-        print(f"    OK")
+        print("    OK")
 
     print("\n==> Provisioning complete")
 

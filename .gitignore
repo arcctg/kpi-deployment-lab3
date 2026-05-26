@@ -1,2 +1,13 @@
 .vagrant/
 app/app
+.env
+*.local.yaml
+deploy/rendered/
+runner-token.txt
+.venv/
+coverage.out
+coverage.html
+verify-report.xml
+__pycache__/
+*.pyc
+.pytest_cache/

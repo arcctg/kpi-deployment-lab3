@@ -2,15 +2,15 @@ services:
   db:
     image: postgres:16-bookworm
     environment:
-      POSTGRES_USER: mywebapp
-      POSTGRES_PASSWORD: mywebapp
-      POSTGRES_DB: mywebapp
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      POSTGRES_DB: ${POSTGRES_DB}
     volumes:
       - pgdata:/var/lib/postgresql/data
     networks:
       - mywebapp-net
     healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U mywebapp -d mywebapp"]
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER} -d ${POSTGRES_DB}"]
       interval: 5s
       timeout: 5s
       retries: 5
@@ -20,7 +20,7 @@ services:
   app:
     build: .
     volumes:
-      - ./deploy/docker-config.yaml:/etc/mywebapp/config.yaml:ro
+      - ./deploy/rendered/docker-config.yaml:/etc/mywebapp/config.yaml:ro
     networks:
       - mywebapp-net
     depends_on:
