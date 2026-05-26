@@ -16,7 +16,7 @@ require_env STUDENT_PASSWORD
 require_env IMAGE_REF
 
 DEFAULT_PASSWORD="12345678"
-REPO_DEPLOY="/tmp/mywebapp-deploy"
+REPO_DEPLOY="${REPO_DEPLOY:-/tmp/mywebapp-deploy}"
 
 user_exists() {
   id "$1" &>/dev/null

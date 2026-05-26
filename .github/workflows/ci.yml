@@ -137,3 +137,37 @@ jobs:
           context: .
           push: true
           tags: ${{ steps.meta.outputs.tags }}
+
+  deploy:
+    name: deploy
+    runs-on: self-hosted
+    needs: build
+    if: startsWith(github.ref, 'refs/tags/v')
+    env:
+      IMAGE_REF: ghcr.io/${{ github.repository }}:${{ github.ref_name }}
+      DB_USER: mywebapp
+      DB_NAME: mywebapp
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      STUDENT_PASSWORD: ${{ secrets.STUDENT_PASSWORD }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Configure SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.TARGET_SSH_KEY }}" > ~/.ssh/target_key
+          chmod 600 ~/.ssh/target_key
+          ssh-keyscan -H "${{ secrets.TARGET_HOST }}" >> ~/.ssh/known_hosts
+      - name: Copy deploy files
+        run: |
+          ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" "mkdir -p /tmp/mywebapp-deploy"
+          scp -i ~/.ssh/target_key deploy/config.yaml.tmpl deploy/mywebapp.service.tmpl deploy/nginx.conf deploy/sudoers-operator deploy/setup_target.sh "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}:/tmp/mywebapp-deploy/"
+      - name: Run target setup
+        run: |
+          ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" \
+            "sudo env IMAGE_REF='${IMAGE_REF}' DB_USER='${DB_USER}' DB_NAME='${DB_NAME}' DB_PASSWORD='${DB_PASSWORD}' STUDENT_PASSWORD='${STUDENT_PASSWORD}' REPO_DEPLOY='/tmp/mywebapp-deploy' bash /tmp/mywebapp-deploy/setup_target.sh"
+      - name: Login and pull image on target
+        run: |
+          ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" \
+            "echo '${{ secrets.GITHUB_TOKEN }}' | sudo docker login ghcr.io -u '${{ github.actor }}' --password-stdin"
+          ssh -i ~/.ssh/target_key "${{ secrets.TARGET_USER }}@${{ secrets.TARGET_HOST }}" \
+            "sudo docker pull '${IMAGE_REF}' && sudo systemctl restart mywebapp.service && sudo systemctl reload nginx"
