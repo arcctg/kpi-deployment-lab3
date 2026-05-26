@@ -1,0 +1,183 @@
+﻿2026-05-26T19:23:42.0129450Z Current runner version: '2.334.0'
+2026-05-26T19:23:42.0151871Z Runner name: 'kpi-lab3-runner'
+2026-05-26T19:23:42.0153343Z Runner group name: 'Default'
+2026-05-26T19:23:42.0155175Z Machine name: 'runner'
+2026-05-26T19:23:42.0160618Z ##[group]GITHUB_TOKEN Permissions
+2026-05-26T19:23:42.0168752Z Contents: read
+2026-05-26T19:23:42.0170011Z Metadata: read
+2026-05-26T19:23:42.0171228Z Packages: read
+2026-05-26T19:23:42.0172174Z ##[endgroup]
+2026-05-26T19:23:42.0179609Z Secret source: Actions
+2026-05-26T19:23:42.0180748Z Prepare workflow directory
+2026-05-26T19:23:42.2360186Z Prepare all required actions
+2026-05-26T19:23:42.2459847Z Getting action download info
+2026-05-26T19:23:44.0528426Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+2026-05-26T19:23:45.1117466Z Complete job name: deploy
+2026-05-26T19:23:45.2480357Z ##[group]Run actions/checkout@v4
+2026-05-26T19:23:45.2482260Z with:
+2026-05-26T19:23:45.2482949Z   repository: arcctg/kpi-deployment-lab3
+2026-05-26T19:23:45.2484221Z   token: ***
+2026-05-26T19:23:45.2484854Z   ssh-strict: true
+2026-05-26T19:23:45.2485484Z   ssh-user: git
+2026-05-26T19:23:45.2486123Z   persist-credentials: true
+2026-05-26T19:23:45.2486832Z   clean: true
+2026-05-26T19:23:45.2487472Z   sparse-checkout-cone-mode: true
+2026-05-26T19:23:45.2488212Z   fetch-depth: 1
+2026-05-26T19:23:45.2489122Z   fetch-tags: false
+2026-05-26T19:23:45.2489784Z   show-progress: true
+2026-05-26T19:23:45.2490438Z   lfs: false
+2026-05-26T19:23:45.2491029Z   submodules: false
+2026-05-26T19:23:45.2491674Z   set-safe-directory: true
+2026-05-26T19:23:45.2492971Z env:
+2026-05-26T19:23:45.2493704Z   IMAGE_REF: ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:23:45.2494592Z   DB_USER: mywebapp
+2026-05-26T19:23:45.2495240Z   DB_NAME: mywebapp
+2026-05-26T19:23:45.2495989Z   DB_PASSWORD: ***
+2026-05-26T19:23:45.2496751Z   STUDENT_PASSWORD: ***
+2026-05-26T19:23:45.2497416Z ##[endgroup]
+2026-05-26T19:23:46.4365369Z Syncing repository: arcctg/kpi-deployment-lab3
+2026-05-26T19:23:46.4368209Z ##[group]Getting Git version info
+2026-05-26T19:23:46.4369415Z Working directory is '/opt/actions-runner/_work/kpi-deployment-lab3/kpi-deployment-lab3'
+2026-05-26T19:23:46.4371042Z [command]/usr/bin/git version
+2026-05-26T19:23:46.4371775Z git version 2.43.0
+2026-05-26T19:23:46.4489015Z ##[endgroup]
+2026-05-26T19:23:46.4500686Z Temporarily overriding HOME='/opt/actions-runner/_work/_temp/6c7be4ca-68d8-4ad7-8f5a-4ba6b49fd559' before making global git config changes
+2026-05-26T19:23:46.4502751Z Adding repository directory to the temporary git global config as a safe directory
+2026-05-26T19:23:46.4504560Z [command]/usr/bin/git config --global --add safe.directory /opt/actions-runner/_work/kpi-deployment-lab3/kpi-deployment-lab3
+2026-05-26T19:23:46.4507133Z [command]/usr/bin/git config --local --get remote.origin.url
+2026-05-26T19:23:46.4508226Z https://github.com/arcctg/kpi-deployment-lab3
+2026-05-26T19:23:46.4511104Z ##[group]Removing previously created refs, to avoid conflicts
+2026-05-26T19:23:46.4512450Z [command]/usr/bin/git rev-parse --symbolic-full-name --verify --quiet HEAD
+2026-05-26T19:23:46.4513453Z HEAD
+2026-05-26T19:23:46.4517410Z ##[endgroup]
+2026-05-26T19:23:46.4518068Z [command]/usr/bin/git submodule status
+2026-05-26T19:23:46.4520788Z ##[group]Cleaning the repository
+2026-05-26T19:23:46.4521591Z [command]/usr/bin/git clean -ffdx
+2026-05-26T19:23:46.4523140Z [command]/usr/bin/git reset --hard HEAD
+2026-05-26T19:23:46.4524217Z HEAD is now at cb9e8ed Merge pull request #2 from arcctg/fix/ci-deploy-dir-perms
+2026-05-26T19:23:46.4556541Z ##[endgroup]
+2026-05-26T19:23:46.4557972Z ##[group]Disabling automatic garbage collection
+2026-05-26T19:23:46.4559110Z [command]/usr/bin/git config --local gc.auto 0
+2026-05-26T19:23:46.4561106Z ##[endgroup]
+2026-05-26T19:23:46.4562097Z ##[group]Setting up auth
+2026-05-26T19:23:46.4563148Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-05-26T19:23:46.4566036Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-05-26T19:23:46.4570399Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-05-26T19:23:46.4573819Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-05-26T19:23:46.4577049Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-05-26T19:23:46.4579930Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-05-26T19:23:46.4583331Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+2026-05-26T19:23:46.4585795Z ##[endgroup]
+2026-05-26T19:23:46.4587245Z ##[group]Fetching the repository
+2026-05-26T19:23:46.4701876Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +cb9e8edb13afe9efbabed5a2db4efe9b17f02206:refs/tags/v0.1.1
+2026-05-26T19:23:47.2853640Z ##[endgroup]
+2026-05-26T19:23:47.2854722Z ##[group]Determining the checkout info
+2026-05-26T19:23:47.2855912Z ##[endgroup]
+2026-05-26T19:23:47.2862792Z [command]/usr/bin/git sparse-checkout disable
+2026-05-26T19:23:47.2865353Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+2026-05-26T19:23:47.2868435Z ##[group]Checking out the ref
+2026-05-26T19:23:47.2869907Z [command]/usr/bin/git checkout --progress --force refs/tags/v0.1.1
+2026-05-26T19:23:47.2871861Z HEAD is now at cb9e8ed Merge pull request #2 from arcctg/fix/ci-deploy-dir-perms
+2026-05-26T19:23:47.2874714Z ##[endgroup]
+2026-05-26T19:23:47.2877296Z [command]/usr/bin/git log -1 --format=%H
+2026-05-26T19:23:47.2878664Z cb9e8edb13afe9efbabed5a2db4efe9b17f02206
+2026-05-26T19:23:47.3149192Z ##[group]Run mkdir -p ~/.ssh
+2026-05-26T19:23:47.3150595Z [36;1mmkdir -p ~/.ssh[0m
+2026-05-26T19:23:47.3152563Z [36;1mecho "***[0m
+2026-05-26T19:23:47.3154163Z [36;1m***[0m
+2026-05-26T19:23:47.3155759Z [36;1m***[0m
+2026-05-26T19:23:47.3157275Z [36;1m***[0m
+2026-05-26T19:23:47.3158764Z [36;1m***[0m
+2026-05-26T19:23:47.3159862Z [36;1m***[0m
+2026-05-26T19:23:47.3161487Z [36;1m***[0m
+2026-05-26T19:23:47.3162423Z [36;1m" > ~/.ssh/target_key[0m
+2026-05-26T19:23:47.3163508Z [36;1mchmod 600 ~/.ssh/target_key[0m
+2026-05-26T19:23:47.3164889Z [36;1mssh-keyscan -H "***" >> ~/.ssh/known_hosts[0m
+2026-05-26T19:23:47.3228226Z shell: /usr/bin/bash -e {0}
+2026-05-26T19:23:47.3229916Z env:
+2026-05-26T19:23:47.3231018Z   IMAGE_REF: ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:23:47.3232352Z   DB_USER: mywebapp
+2026-05-26T19:23:47.3233189Z   DB_NAME: mywebapp
+2026-05-26T19:23:47.3234301Z   DB_PASSWORD: ***
+2026-05-26T19:23:47.3235304Z   STUDENT_PASSWORD: ***
+2026-05-26T19:23:47.3236385Z ##[endgroup]
+2026-05-26T19:23:47.4602292Z # ***:22 SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.14
+2026-05-26T19:23:47.6972171Z # ***:22 SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.14
+2026-05-26T19:23:47.7963516Z # ***:22 SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.14
+2026-05-26T19:23:47.9941987Z # ***:22 SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.14
+2026-05-26T19:23:47.9943209Z # ***:22 SSH-2.0-OpenSSH_9.6p1 Ubuntu-3ubuntu13.14
+2026-05-26T19:23:48.0068584Z ##[group]Run TARGET="***@***"
+2026-05-26T19:23:48.0069559Z [36;1mTARGET="***@***"[0m
+2026-05-26T19:23:48.0070325Z [36;1mssh -i ~/.ssh/target_key "${TARGET}" \[0m
+2026-05-26T19:23:48.0071636Z [36;1m  "sudo mkdir -p /tmp/mywebapp-deploy && sudo chown ***:*** /tmp/mywebapp-deploy"[0m
+2026-05-26T19:23:48.0073142Z [36;1mscp -i ~/.ssh/target_key deploy/config.yaml.tmpl deploy/mywebapp.service.tmpl \[0m
+2026-05-26T19:23:48.0074820Z [36;1m  deploy/nginx.conf deploy/sudoers-operator deploy/sudoers-*** deploy/setup_target.sh \[0m
+2026-05-26T19:23:48.0076375Z [36;1m  "${TARGET}:/tmp/mywebapp-deploy/"[0m
+2026-05-26T19:23:48.0141650Z shell: /usr/bin/bash -e {0}
+2026-05-26T19:23:48.0142825Z env:
+2026-05-26T19:23:48.0143850Z   IMAGE_REF: ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:23:48.0145166Z   DB_USER: mywebapp
+2026-05-26T19:23:48.0146094Z   DB_NAME: mywebapp
+2026-05-26T19:23:48.0147197Z   DB_PASSWORD: ***
+2026-05-26T19:23:48.0148268Z   STUDENT_PASSWORD: ***
+2026-05-26T19:23:48.0149291Z ##[endgroup]
+2026-05-26T19:23:49.4822441Z ##[group]Run TARGET="***@***"
+2026-05-26T19:23:49.4824429Z [36;1mTARGET="***@***"[0m
+2026-05-26T19:23:49.4825580Z [36;1mssh -i ~/.ssh/target_key "${TARGET}" \[0m
+2026-05-26T19:23:49.4826936Z [36;1m  "sudo env IMAGE_REF='${IMAGE_REF}' DB_USER='${DB_USER}' DB_NAME='${DB_NAME}' \[0m
+2026-05-26T19:23:49.4828306Z [36;1m  DB_PASSWORD='${DB_PASSWORD}' STUDENT_PASSWORD='${STUDENT_PASSWORD}' \[0m
+2026-05-26T19:23:49.4830096Z [36;1m  REPO_DEPLOY='/tmp/mywebapp-deploy' bash /tmp/mywebapp-deploy/setup_target.sh"[0m
+2026-05-26T19:23:49.4860228Z shell: /usr/bin/bash -e {0}
+2026-05-26T19:23:49.4865358Z env:
+2026-05-26T19:23:49.4866514Z   IMAGE_REF: ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:23:49.4867466Z   DB_USER: mywebapp
+2026-05-26T19:23:49.4868100Z   DB_NAME: mywebapp
+2026-05-26T19:23:49.4868964Z   DB_PASSWORD: ***
+2026-05-26T19:23:49.4869691Z   STUDENT_PASSWORD: ***
+2026-05-26T19:23:49.4870354Z ##[endgroup]
+2026-05-26T19:24:01.3779834Z Synchronizing state of postgresql.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+2026-05-26T19:24:01.3817307Z Executing: /usr/lib/systemd/systemd-sysv-install enable postgresql
+2026-05-26T19:24:04.3659119Z nginx: the configuration file /etc/nginx/nginx.conf syntax is ok
+2026-05-26T19:24:04.3763467Z nginx: configuration file /etc/nginx/nginx.conf test is successful
+2026-05-26T19:24:05.2037423Z Synchronizing state of nginx.service with SysV service script with /usr/lib/systemd/systemd-sysv-install.
+2026-05-26T19:24:05.2052898Z Executing: /usr/lib/systemd/systemd-sysv-install enable nginx
+2026-05-26T19:24:11.8145185Z Target node setup complete
+2026-05-26T19:24:11.8361770Z ##[group]Run ssh -i ~/.ssh/target_key "***@***" \
+2026-05-26T19:24:11.8362702Z [36;1mssh -i ~/.ssh/target_key "***@***" \[0m
+2026-05-26T19:24:11.8364050Z [36;1m  "echo '***' | sudo docker login ghcr.io -u 'arcctg' --password-stdin"[0m
+2026-05-26T19:24:11.8364766Z [36;1mssh -i ~/.ssh/target_key "***@***" \[0m
+2026-05-26T19:24:11.8365550Z [36;1m  "sudo docker pull '${IMAGE_REF}' && sudo systemctl restart mywebapp.service && sudo systemctl reload nginx"[0m
+2026-05-26T19:24:11.8426767Z shell: /usr/bin/bash -e {0}
+2026-05-26T19:24:11.8427494Z env:
+2026-05-26T19:24:11.8428122Z   IMAGE_REF: ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:24:11.8429238Z   DB_USER: mywebapp
+2026-05-26T19:24:11.8429821Z   DB_NAME: mywebapp
+2026-05-26T19:24:11.8430652Z   DB_PASSWORD: ***
+2026-05-26T19:24:11.8431292Z   STUDENT_PASSWORD: ***
+2026-05-26T19:24:11.8431839Z ##[endgroup]
+2026-05-26T19:24:13.6377180Z 
+2026-05-26T19:24:13.6379949Z WARNING! Your credentials are stored unencrypted in '/root/.docker/config.json'.
+2026-05-26T19:24:13.6380811Z Configure a credential helper to remove this warning. See
+2026-05-26T19:24:13.6381429Z https://docs.docker.com/go/credential-store/
+2026-05-26T19:24:13.6381787Z 
+2026-05-26T19:24:13.6383042Z Login Succeeded
+2026-05-26T19:24:15.4012350Z v0.1.1: Pulling from arcctg/kpi-deployment-lab3
+2026-05-26T19:24:15.8608075Z Digest: sha256:d60b2d2f9ccfecebce9579d9b29fb9bd407c7315daac7dd9ecaca4f66462746f
+2026-05-26T19:24:15.8702050Z Status: Image is up to date for ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:24:15.8803553Z ghcr.io/arcctg/kpi-deployment-lab3:v0.1.1
+2026-05-26T19:24:18.3737175Z Post job cleanup.
+2026-05-26T19:24:18.7586395Z [command]/usr/bin/git version
+2026-05-26T19:24:18.7776519Z git version 2.43.0
+2026-05-26T19:24:18.7946446Z Temporarily overriding HOME='/opt/actions-runner/_work/_temp/398d8a11-46b0-402b-b8ac-712c0eb450d0' before making global git config changes
+2026-05-26T19:24:18.7966863Z Adding repository directory to the temporary git global config as a safe directory
+2026-05-26T19:24:18.7987413Z [command]/usr/bin/git config --global --add safe.directory /opt/actions-runner/_work/kpi-deployment-lab3/kpi-deployment-lab3
+2026-05-26T19:24:18.8262280Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+2026-05-26T19:24:18.8470310Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+2026-05-26T19:24:19.0213497Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+2026-05-26T19:24:19.0363289Z http.https://github.com/.extraheader
+2026-05-26T19:24:19.0374071Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+2026-05-26T19:24:19.0549751Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+2026-05-26T19:24:19.2067422Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+2026-05-26T19:24:19.2222758Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+2026-05-26T19:24:19.3928527Z Cleaning up orphan processes
+2026-05-26T19:24:19.4548158Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
