@@ -30,7 +30,7 @@ Vagrant.configure("2") do |config|
       set -euo pipefail
       if [[ -f /vagrant/.env ]]; then
         set -a
-        source /vagrant/.env
+        source <(sed 's/\r$//' /vagrant/.env)
         set +a
       fi
       export IMAGE_REF="${IMAGE_REF:-mywebapp:local}"
