@@ -108,3 +108,32 @@ jobs:
           path: |
             app/coverage.out
             app/coverage.html
+
+  build:
+    name: build
+    runs-on: ubuntu-latest
+    needs: test
+    permissions:
+      contents: read
+      packages: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: docker/login-action@v3
+        with:
+          registry: ghcr.io
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+      - name: Set image tags
+        id: meta
+        run: |
+          IMAGE="ghcr.io/${{ github.repository }}"
+          if [[ "${{ github.ref }}" == refs/tags/v* ]]; then
+            echo "tags=${IMAGE}:stable,${IMAGE}:${{ github.ref_name }}" >> "$GITHUB_OUTPUT"
+          else
+            echo "tags=${IMAGE}:latest,${IMAGE}:sha-${{ github.sha }}" >> "$GITHUB_OUTPUT"
+          fi
+      - uses: docker/build-push-action@v6
+        with:
+          context: .
+          push: true
+          tags: ${{ steps.meta.outputs.tags }}
