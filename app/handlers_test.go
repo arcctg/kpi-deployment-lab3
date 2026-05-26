@@ -133,3 +133,7 @@ func TestHandleNoteByIDNotFound(t *testing.T) {
 
 	assert.Equal(t, http.StatusNotFound, rec.Code)
 }
+
+func TestDemoFailingCheck(t *testing.T) {
+	t.Fatal("intentional failure for Lab 3 blocked PR demonstration")
+}
